@@ -1,0 +1,13 @@
+#!/bin/bash
+cd Common/unit_test || { echo 'Failed because not in Fish/ directory. Please cd there and run script' ; exit 1; }
+echo "Running Common ontology tests"
+python3 -m unittest avatar_unit_test.py board_test.py pieces_view_test.py tile_test.py create_state_test.py game_state_test.py player_info_test.py game_tree_test.py
+echo "Running player tests"
+cd ../../Player/unit_test
+python3 -m unittest strategy_test.py basic_player_test.py
+echo "Running referee/manager unit tests"
+cd ../../Admin/unit_test
+python3 -m unittest ref_test.py manager_test.py
+echo "Running server unit tests"
+cd ../../Remote/unit_test
+python3 -m unittest server_test.py

@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+import sys
+
+
+def check_limit_flag():
+    """
+    Purpose: Checks if the limit flag is present in system arguments
+    Signature: Void -> Boolean
+    :return: boolean indicating whether limit flag was present
+    """
+    is_limit = False
+    if len(sys.argv) >= 2:
+        is_limit = sys.argv[1] == '-limit'
+    return is_limit
+
+
+def parse_args(is_limit):
+    """
+    Purpose: Parses arguments from the command line for printing
+    Signature: Boolean -> String
+    :param is_limit: whether the limit flag was used before
+    :return: The final string to be printed out to STDOUT
+    """
+    final_str = 'hello world'
+    if is_limit:
+        str_args = sys.argv[2:]
+    else:
+        str_args = sys.argv[1:]
+
+    if str_args:
+        separator = ' '
+        final_str = separator.join(str_args)
+    return final_str
+
+
+def print_results(is_limit, final_str):
+    """
+    Purpose: Print the results of parsing argv to STDOUT
+    Signature: Boolean String -> Void
+    :param is_limit: whether limit flag is present
+                     and first in the arguments
+    :param final_str: the final concatenated string
+                      to display to the user
+    :return: prints to STDOUT the final string the specified amount of times
+    """
+    if is_limit:
+        for _ in range(20):
+            print(final_str, file=sys.stdout)
+    else:
+        while True:
+            print(final_str, file=sys.stdout)
+
+
+def main():
+    """
+    Purpose: Runs the xyes program which captures input from the command line and displays it in the terminal
+    Signature: Void -> Void
+    :return: the xyes routine is run
+    """
+    limit_flag = check_limit_flag()
+    print_str = parse_args(limit_flag)
+    print_results(limit_flag, print_str)
+
+
+if __name__ == '__main__':
+    main()

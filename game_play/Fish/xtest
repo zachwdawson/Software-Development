@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd Common
+python3 -m unittest discover -s ./unit_test -p '*_test.py'

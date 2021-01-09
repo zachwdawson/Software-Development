@@ -1,0 +1,73 @@
+#!/usr/bin/env python3
+from tkinter import *
+import sys
+
+
+def inside_hex(size, x, y):
+    """
+    Purpose: Determines if the coordinates of the clicked position in the canvas were inside the Hexagon.
+    Signature: Int, Int, Int -> Boolean
+    :param size: The provided size of the hexagon
+    :param x: The x coordinate of the position in the canvas that was clicked
+    :param y: The y coordinate of the position in the Canvas that was clicked
+    :return: Boolean representing if the click occurred within the Hexagon
+    """
+    in_upper_left_tri = size - y >= x
+    in_upper_right_tri = x - y >= size * 2
+    in_lower_left_tri = y - x >= size
+    in_lower_right_tri = x - size * 2 + y - size >= size
+    return not(in_upper_left_tri or in_upper_right_tri or in_lower_left_tri or in_lower_right_tri)
+
+
+def on_object_click(event, canvas_size):
+    """
+    Purpose: Parses an on-click event to determine where on the canvas the click occurred
+    and passes it to the insideHex function
+    Signature: Event, Int -> Void
+    :param event: The (x,y) coordinate of a click that occurred on the Canvas.
+    :param canvas_size: The size of a hexagon
+    """
+    if inside_hex(canvas_size, event.x, event.y):
+        window.destroy()
+
+
+def create_canvas(size):
+    """
+    Purpose: To create a canvas and draw a hexagon in a new window
+    Signature: Int -> Canvas, Tk
+    :param size: The size of the hexagon
+    :return: The Canvas and the Window to be displayed
+    """
+    tk_window = Tk()
+    tk_canvas = Canvas(tk_window, width=size * 3, height=size * 2, background='white')
+    tk_canvas.grid(row=0, column=0)
+    tk_canvas.create_line(0, size, size, 0, size * 2, 0, size * 3, size, size * 2, size * 2, size, size * 2, 0,
+                       size, fill='red', width=5)
+    tk_canvas.bind('<Button-1>', lambda event: on_object_click(event, size))
+    return tk_canvas, tk_window
+
+
+def parse_size():
+    """
+    Purpose: To parse the provided command line arguments and get the given size of the hexagon
+    Signature: Void -> Int
+    :return: Integer representing the Hexagon size
+    """
+    try:
+        first_arg = int(sys.argv[1])
+        if first_arg <= 0:
+            raise ValueError('Value of argument should be positive')
+        if len(sys.argv) > 2:
+            raise ValueError('Only one value expected')
+        else:
+            return first_arg
+    except ValueError:
+        print("usage: ./xgui positive-integer")
+        sys.exit()
+
+
+if __name__ == "__main__":
+    size = parse_size()
+    canvas, window = create_canvas(size)
+    window.mainloop()
+

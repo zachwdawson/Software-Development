@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+import sys, os, json
+from typing import List
+import threading
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__),  '..')))
+from Fish.Remote.client import TCPClient
+
+
+def run_client(port: int, host: str, name: str):
+    client = TCPClient(host, port, name)
+    client.play_tournament()
+
+
+def run_clients(num_clients: int, port: int, host: str):
+    client_threads = []
+    for i in range(num_clients):
+        thread = threading.Thread(target=run_client, args=(port, host, "client"))
+        client_threads.append(thread)
+
+    for thread in client_threads:
+        thread.start()
+
+
+def main():
+    if len(sys.argv) not in range(3, 5):
+        print("usage: ./xclients int int [int]")
+        sys.exit(1)
+
+    num_clients = sys.argv[1]
+
+    if not num_clients.isnumeric():
+        print("usage: ./xserver int")
+        sys.exit(1)
+
+    port = sys.argv[2]
+
+    if not port.isnumeric():
+        print("usage: ./xserver int")
+        sys.exit(1)
+
+    if len(sys.argv) == 4:
+        host = sys.argv[3]
+    else:
+        host = '127.0.0.1'
+
+    run_clients(int(num_clients), int(port), host)
+
+
+if __name__ == "__main__":
+    main()

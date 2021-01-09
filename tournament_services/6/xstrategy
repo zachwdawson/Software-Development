@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+import json
+
+# relative path importing so that it can be used as a script
+import sys
+import os
+
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__),  '..')))
+
+from Fish.Other.test_harness_transformation import TestHarnessTransformationHelper as THHelper
+from Fish.Player.strategy import FishBasicStrategy
+from Fish.Common.game_tree import FishGameTree
+
+
+def run_xstrategy(strategy_json):
+    """
+    Purpose: Run the xstrategy test harness which takes a JSON array containing
+    a depth and a state and returns the best move for the current player's
+    turn in the given state.
+    Signature: [Depth, State] -> Action (test harness rep)
+    """
+    turns = strategy_json[0]
+    state_json = strategy_json[1]
+    game_state = THHelper.create_state(state_json)
+    game_tree = FishGameTree(game_state)
+    if not game_tree.get_children_moves():
+        print(json.dumps(False))
+    else:
+        move = FishBasicStrategy(turns).find_next_move(game_state)
+        print(json.dumps(THHelper.convert_action_to_json_rep(move)))
+
+
+if __name__ == '__main__':
+    depth_state = json.loads(THHelper.read_from_stdin())
+    run_xstrategy(depth_state)

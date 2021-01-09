@@ -1,0 +1,46 @@
+#!/usr/bin/env python3
+import json
+
+# relative path importing so that it can be used as a script
+import sys
+import os
+
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__),  '..')))
+
+from Fish.Other.test_harness_transformation import TestHarnessTransformationHelper as THHelper
+from Fish.Player.player import BasicPlayer
+from Fish.Admin.referee import Referee
+from Fish.Common.representations.game_state import FishGameStateFactory
+
+def create_ref_and_run_game(depth_state):
+    num_rows = depth_state['row']
+    num_cols = depth_state['column']
+    num_fish = depth_state['fish']
+    json_players = depth_state['players']
+    players = []
+    for i, player in enumerate(json_players):
+        name = player[0]
+        depth = player[1]
+        players.append((BasicPlayer(depth, name), i))
+
+    player_colors = []
+    for i, (player, _) in enumerate(players):
+        color = FishGameStateFactory.DEFAULT_COLOR_ORDER[i]
+        player_colors.append(color)
+
+    ref = Referee()
+    state = FishGameStateFactory().create_game_state_with_num_fish(num_rows, num_cols, num_fish, player_colors)
+    ref.initialize_and_run_from_game_state(players, state)
+
+    return ref
+
+
+if __name__ == '__main__':
+    depth_state = json.loads(THHelper.read_from_stdin())
+    ref = create_ref_and_run_game(depth_state)
+
+    winners = []
+    for winner in ref.winners:
+        winners.append(ref.players[winner].name)
+    print(json.dumps(sorted(winners)))

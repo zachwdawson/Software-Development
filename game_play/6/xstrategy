@@ -1,0 +1,93 @@
+#!/usr/bin/python3
+
+import sys
+sys.path.insert(0, '../Fish/Common')
+sys.path.append('../Fish/Player')
+from structures import Coordinate, Player, GameStatePhase, Action
+from board import FishBoard
+from state import FishGameState
+from strategy import GenericStrategyComponent
+import json
+
+
+def create_state(players, board):
+    """
+    Create state for given players and board
+    :param players: List of Players whose penguins will be added
+    :param board: 2D list representation of a board with each element representing how many fish at a specific location
+    :return: the resulting state from adding the players penguins to the board
+    """
+    state = FishGameState(board=board, num_players=len(players), players=players, current_player=players[0], phase=GameStatePhase.FINAL)
+    return state
+
+
+def create_board(board):
+    """
+    Create model with correct size and number of fish given a json board.
+    :param board: 2D list representation of a board with each element representing how many fish at a specific location
+    :return: Return the FishBoard model that is constructed from the json
+    """
+    model = FishBoard(len(board), len(sorted(board, key=lambda row: len(row), reverse=True)[0]))
+    for r, row in enumerate(board):
+        for c, num_fish in enumerate(row):
+            if num_fish == 0:
+                model = model.create_hole(r, c)
+            elif num_fish > 0:
+                for fish in range(num_fish):
+                    model = model.add_fish(r, c)
+
+    return model
+
+
+def create_players(players_json):
+    """
+    Create list of PLayers from json array of Players
+    :param players_json: Json representation of players as defined in 4---TheGameTree
+    :return: Return list of Player objects with correct Penguin placements and score
+    """
+    players = []
+    for player in players_json:
+        penguins = []
+        for penguin in player['places']:
+            penguins.append(Coordinate(row=penguin[0], col=penguin[1]))
+        new_player = Player(color=player['color'], age=0, score=player['score'], penguins=penguins)
+        players.append(new_player)
+
+    return players
+
+
+def transform(input):
+    """
+    Transform the input json into the desired_depth and state
+    :param input: str input from stdin
+    :return: desired_depth:int, state:FishGameState from the given json
+    """
+    input_json = json.loads(input)
+    desired_depth = input_json[0]
+    state_json = input_json[1]
+    players = create_players(state_json['players'])
+    board = create_board(state_json['board'])
+    state = create_state(players, board)
+    return desired_depth, state
+
+
+def retrieve_input():
+    """
+    Retrieve input from stdin
+    :return: String that has been read from stdin
+    """
+    input = ""
+    for line in sys.stdin:
+        input += line
+
+    return input
+
+
+if __name__ == '__main__':
+    input = retrieve_input()
+    desired_depth, state = transform(input)
+    optimal_action = GenericStrategyComponent().choose_action_from_state(state=state, num_turns=desired_depth)
+    if optimal_action is not None:
+        print(json.dumps([optimal_action.start, optimal_action.end]))
+    else:
+        print(json.dumps(False))
