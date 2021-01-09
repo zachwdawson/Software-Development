@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+
+import sys
+import json
+from json_stream_parser import load_iter
+
+def transform(objs):
+    first_json = {"count": len(objs), "seq": objs}
+    second_json = [len(objs)]
+    second_json.extend(objs[::-1])
+    print(json.dumps(first_json))
+    print(json.dumps(second_json))
+
+def retrieve_input():
+    objs = [obj for obj in load_iter(sys.stdin)]
+    return objs
+
+if __name__ == '__main__':
+    objs = retrieve_input()
+    transform(objs)
+
+
+
+
+
+
+
+
+

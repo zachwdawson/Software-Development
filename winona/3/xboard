@@ -1,0 +1,54 @@
+#!/usr/bin/python3
+
+import sys
+sys.path.insert(0, '../Fish/Common')
+
+from structures import Coordinate
+from board import FishBoard
+import json
+
+def create_board(board):
+    """
+    Create model with correct size and number of fish given a json board.
+    :param board: 2D list representation of a board with each element representing how many fish at a specific location
+    :return: Return the FishBoard model that is constructed from the json
+    """
+    model = FishBoard(len(board), len(board[0]))
+    for r, row in enumerate(board):
+        for c, num_fish in enumerate(row):
+            if num_fish == 0:
+                model.create_hole(r, c)
+            elif num_fish > 0:
+                for fish in range(num_fish):
+                    model.add_fish(r, c)
+
+    return model
+
+def transform(input):
+    """
+    Transform the stdin input into a Coordinate and FishBoard models.
+    :param input: String that has been read from stdin
+    :return: Coordinate for where to get reachable tiles from, FishBoard to check for reachable tiles on
+    """
+
+    board_posn = json.loads(input)
+
+    position = Coordinate(board_posn['position'][0], board_posn['position'][1])
+    board = create_board(board_posn['board'])
+    return position, board
+
+def retrieve_input():
+    """
+    Retrieve input from stdin
+    :return: String that has been read from stdin
+    """
+    input = ""
+    for line in sys.stdin:
+        input += line
+
+    return input
+
+if __name__ == '__main__':
+    input = retrieve_input()
+    position, board = transform(input)
+    print(len(board.get_reachable_tiles(position.row, position.col)))
