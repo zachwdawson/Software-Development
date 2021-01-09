@@ -1,2 +1,0 @@
-{"count": 5, "seq": [{"test": {"hi": "hello", "bye": "goodbye"}}, "a", "b", 1, {"a": 1, "b": ["b0", "b1"], "c": {"hello": "world", "goodbye": "cruel world"}, "d": true}]}
-[5, {"a": 1, "b": ["b0", "b1"], "c": {"hello": "world", "goodbye": "cruel world"}, "d": true}, 1, "b", "a", {"test": {"hi": "hello", "bye": "goodbye"}}]

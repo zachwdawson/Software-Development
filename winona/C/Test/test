@@ -1,3 +1,0 @@
-#!/bin/bash
-
-../xjson < 1-in.json | diff - 1-out.json

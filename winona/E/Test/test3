@@ -1,2 +1,0 @@
-#!/bin/bash
-cat 3-in.json | nc login-students.ccs.neu.edu 45678 | diff - 3-out.json
