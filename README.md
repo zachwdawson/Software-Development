@@ -10,6 +10,6 @@ game states which were not provided in the code base I inherited. I am confident
 of nodes to be made for each child.
 
 
-[First Project]https://github.com/zachwdawson/Software-Development/tree/main/game_play/Fish
+[First Project](https://github.com/zachwdawson/Software-Development/tree/main/game_play/Fish)
 
-[Inherited Project]https://github.com/zachwdawson/Software-Development/tree/main/tournament_services/Fish
+[Inherited Project](https://github.com/zachwdawson/Software-Development/tree/main/tournament_services/Fish)
