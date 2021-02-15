@@ -8,3 +8,8 @@ be reasonably fixed in the new code base, resulting in subpar performance. In or
 and successor states as children. We then used a mini-max algorithm to build competent bots that could play against users. This game tree necessitated immutable
 game states which were not provided in the code base I inherited. I am confident that our intital design would have run much faster because our game states did not require deep copies
 of nodes to be made for each child.
+
+
+[First Project]https://github.com/zachwdawson/Software-Development/tree/main/game_play/Fish
+
+[Inherited Project]https://github.com/zachwdawson/Software-Development/tree/main/tournament_services/Fish
